@@ -470,7 +470,7 @@
 	deploy_time = 1 SECONDS
 	damage_falloff_mult = 0.25
 	undeploy_time = 0.5 SECONDS
-	max_integrity = 200
+	max_integrity = 125
 
 
 /obj/item/weapon/gun/standard_mmg/machinegunner
