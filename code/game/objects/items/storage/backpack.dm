@@ -237,6 +237,17 @@
 	icon_state = "marinepack"
 	worn_icon_state = "marinepack"
 
+/obj/item/storage/backpack/standard
+
+	name = "\improper Terragov battle standard"
+	desc = "A noble battle standard sometimes issued to TGMC battalions. Protect the colours."
+	icon_state = "marinepack"
+	worn_icon_list = list(
+		slot_back_str = "icons/mob/items_back_64.dmi"
+	)
+	worn_icon_state = "flagpack"
+
+
 /obj/item/storage/backpack/marine/standard
 	name = "\improper lightweight IMP backpack"
 	desc = "The standard-issue pack of the TGMC forces. Designed to slug gear into the battlefield."
