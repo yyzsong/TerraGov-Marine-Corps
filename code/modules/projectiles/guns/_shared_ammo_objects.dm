@@ -13,8 +13,7 @@
 	icon = 'icons/effects/fire.dmi'
 	icon_state = "red_2"
 	layer = BELOW_OBJ_LAYER
-	light_system = MOVABLE_LIGHT
-	light_mask_type = /atom/movable/lighting_mask/flicker
+	light_system = STATIC_LIGHT
 	light_on = TRUE
 	light_range = 3
 	light_power = 3
@@ -54,7 +53,7 @@
 			light_intensity = 4
 		if(25 to INFINITY)
 			light_intensity = 6
-	set_light_range_power_color(light_intensity, light_power, light_color)
+	set_light(light_intensity, light_power, light_color)
 
 /obj/fire/update_icon_state()
 	. = ..()
@@ -72,6 +71,10 @@
 			icon_state = "[flame_color]_2"
 		if(25 to INFINITY)
 			icon_state = "[flame_color]_3"
+
+/obj/fire/update_overlays()
+	. = ..()
+	. += emissive_appearance(icon, icon_state, src)
 
 /obj/fire/process()
 	if(!isturf(loc))
@@ -188,4 +191,4 @@
 		debuff.add_stacks(PYROGEN_MELTING_FIRE_EFFECT_STACK, creator)
 	else
 		human_affected.apply_status_effect(STATUS_EFFECT_MELTING_FIRE, PYROGEN_MELTING_FIRE_EFFECT_STACK, creator)
-	human_affected.take_overall_damage(PYROGEN_MELTING_FIRE_DAMAGE, BURN, FIRE, max_limbs = 2)
+	human_affected.take_overall_damage(PYROGEN_MELTING_FIRE_DAMAGE, BURN, FIRE, updating_health = TRUE, max_limbs = 2)

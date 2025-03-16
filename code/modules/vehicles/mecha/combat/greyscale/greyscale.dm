@@ -23,12 +23,13 @@
 	pixel_x = -16
 	soft_armor = list(MELEE = 25, BULLET = 75, FIRE = 25, BOMB = 50, LASER = 40, ENERGY = 40, ACID = 30, BIO = 100)
 	facing_modifiers = list(VEHICLE_FRONT_ARMOUR = 1, VEHICLE_SIDE_ARMOUR = 1, VEHICLE_BACK_ARMOUR = 1)
+	step_energy_drain = 0
 	move_delay = 3
 	max_equip_by_category = MECH_GREYSCALE_MAX_EQUIP
 	internal_damage_threshold = 15
 	internal_damage_probability = 5
 	possible_int_damage = MECHA_INT_FIRE|MECHA_INT_SHORT_CIRCUIT
-	mecha_flags = ADDING_ACCESS_POSSIBLE | CANSTRAFE | IS_ENCLOSED | HAS_HEADLIGHTS | MECHA_SKILL_LOCKED | MECHA_SPIN_WHEN_NO_ANGLE | OMNIDIRECTIONAL_ATTACKS
+	mecha_flags = ADDING_ACCESS_POSSIBLE | CANSTRAFE | IS_ENCLOSED | HAS_HEADLIGHTS | MECHA_SKILL_LOCKED | MECHA_SPIN_WHEN_NO_ANGLE | OMNIDIRECTIONAL_ATTACKS | QUIET_TURNS
 	explosion_block = 2
 	pivot_step = TRUE
 	/// keyed list. values are types at init, otherwise instances of mecha limbs, order is layer order as well
@@ -156,13 +157,13 @@
 /// Checks if we can dash in the specified direction, and activates the ability if so.
 /obj/vehicle/sealed/mecha/combat/greyscale/proc/check_dash(direction)
 	if(last_move_dir == direction && last_mousedown_time + double_tap_timing > world.time)
-		if(!use_power(dash_power_consumption))
-			for(var/mob/occupant AS in return_drivers())
-				balloon_alert(occupant, "Not enough for dash")
-			return
 		if(TIMER_COOLDOWN_CHECK(src, COOLDOWN_MECHA_DASH))
 			for(var/mob/occupant AS in return_drivers())
 				balloon_alert(occupant, "Dash cooldown ([(S_TIMER_COOLDOWN_TIMELEFT(src, COOLDOWN_MECHA_DASH) / 10)]s)")
+			return
+		if(!use_power(dash_power_consumption))
+			for(var/mob/occupant AS in return_drivers())
+				balloon_alert(occupant, "Not enough for dash")
 			return
 		S_TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_DASH, dash_cooldown)
 		activate_dash(direction)

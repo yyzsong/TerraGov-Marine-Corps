@@ -4,7 +4,7 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 /proc/generate_greyscale_weapons_data()
 	. = list("weapons" = list(), "ammo" = list(), "armor" = list(), "utility" = list(), "power" = list())
 	for(var/obj/item/mecha_parts/mecha_equipment/weapon/type AS in subtypesof(/obj/item/mecha_parts/mecha_equipment))
-		if(!(initial(type.mech_flags) & EXOSUIT_MODULE_GREYSCALE))
+		if(!(initial(type.mech_flags) & EXOSUIT_MODULE_VENDABLE))
 			continue
 		if(initial(type.mech_flags) == ALL)
 			continue
@@ -63,27 +63,6 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 			"ammo_type" = initial(ammo.ammo_type),
 		))
 
-/atom/movable/screen/mech_builder_view
-	name = "Mech preview"
-	del_on_map_removal = FALSE
-	layer = OBJ_LAYER
-	plane = GAME_PLANE
-	///list of plane masters to apply to owners
-	var/list/plane_masters = list()
-
-/atom/movable/screen/mech_builder_view/Initialize(mapload, datum/hud/hud_owner)
-	. = ..()
-	assigned_map = "mech_preview_[REF(src)]"
-	set_position(1, 1)
-	for(var/plane_master_type in subtypesof(/atom/movable/screen/plane_master) - /atom/movable/screen/plane_master/blackness)
-		var/atom/movable/screen/plane_master/plane_master = new plane_master_type()
-		plane_master.screen_loc = "[assigned_map]:CENTER"
-		plane_masters += plane_master
-
-/atom/movable/screen/mech_builder_view/Destroy()
-	QDEL_LIST(plane_masters)
-	return ..()
-
 /obj/machinery/computer/mech_builder
 	name = "mech computer"
 	screen_overlay = "mech_computer"
@@ -130,7 +109,7 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 	///List of max equipment that we're allowed to attach while using this console
 	var/equipment_max = MECH_GREYSCALE_MAX_EQUIP
 	///reference to the mech screen object
-	var/atom/movable/screen/mech_builder_view/mech_view
+	var/atom/movable/screen/map_view/mech_view
 	///list of stat data that will be sent to the UI
 	var/list/current_stats
 
@@ -142,6 +121,7 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 /obj/machinery/computer/mech_builder/Initialize(mapload)
 	. = ..()
 	mech_view = new
+	mech_view.generate_view("mech_builder_view_[REF(src)]")
 	update_ui_view()
 	current_stats = list()
 	var/list/datum/mech_limb/limbs = list()
@@ -189,13 +169,11 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 		return
 	ui = new(user, src, "MechVendor", name)
 	ui.open()
-	user.client?.screen |= mech_view.plane_masters
-	user.client?.register_map_obj(mech_view)
+	mech_view.display_to(user)
 
 /obj/machinery/computer/mech_builder/ui_close(mob/user)
 	. = ..()
-	user.client?.screen -= mech_view.plane_masters
-	user.client?.clear_map(mech_view.assigned_map)
+	mech_view.hide_from(user)
 
 /obj/machinery/computer/mech_builder/ui_assets(mob/user)
 	. = ..()
@@ -332,7 +310,7 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 				return FALSE
 			if(initial(new_type.equipment_slot) != MECHA_WEAPON)
 				return FALSE
-			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_GREYSCALE))
+			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_VENDABLE))
 				return FALSE
 			if(params["is_right_weapon"])
 				selected_equipment[MECHA_R_ARM] = new_type
@@ -344,7 +322,7 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 			var/obj/item/mecha_parts/mecha_equipment/new_type = text2path(params["type"])
 			if(!ispath(new_type, /obj/item/mecha_parts/mecha_equipment))
 				return FALSE
-			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_GREYSCALE))
+			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_VENDABLE))
 				return FALSE
 			if(length(selected_equipment[MECHA_POWER]) >= equipment_max[MECHA_POWER])
 				return FALSE
@@ -361,7 +339,7 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 			var/obj/item/mecha_parts/mecha_equipment/new_type = text2path(params["type"])
 			if(!ispath(new_type, /obj/item/mecha_parts/mecha_equipment))
 				return FALSE
-			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_GREYSCALE))
+			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_VENDABLE))
 				return FALSE
 			if(length(selected_equipment[MECHA_ARMOR]) >= equipment_max[MECHA_ARMOR])
 				return FALSE
@@ -372,7 +350,7 @@ GLOBAL_LIST_INIT(greyscale_weapons_data, generate_greyscale_weapons_data())
 			var/obj/item/mecha_parts/mecha_equipment/new_type = text2path(params["type"])
 			if(!ispath(new_type, /obj/item/mecha_parts/mecha_equipment))
 				return FALSE
-			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_GREYSCALE))
+			if(!(initial(new_type.mech_flags) & EXOSUIT_MODULE_VENDABLE))
 				return FALSE
 			if(length(selected_equipment[MECHA_UTILITY]) >= equipment_max[MECHA_UTILITY])
 				return FALSE

@@ -63,10 +63,18 @@
 			to_chat(occupants, "[icon2html(src, occupants)][span_warning("Missing [scanmod? "capacitor" : "scanning module"].")]")
 			TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MESSAGE, 2 SECONDS)
 		return FALSE
-	if(!use_power(step_energy_drain))
+	if(step_energy_drain && !use_power(step_energy_drain))
 		if(!TIMER_COOLDOWN_CHECK(src, COOLDOWN_MECHA_MESSAGE))
 			to_chat(occupants, "[icon2html(src, occupants)][span_warning("Insufficient power to move!")]")
 			TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MESSAGE, 2 SECONDS)
+		if(leg_overload_mode)
+			for(var/mob/booster AS in occupant_actions)
+				var/action_type = /datum/action/vehicle/sealed/mecha/mech_overload_mode
+				var/datum/action/vehicle/sealed/mecha/mech_overload_mode/overload = occupant_actions[booster][action_type]
+				if(!overload)
+					continue
+				overload.action_activate(NONE, FALSE)
+				break
 		return FALSE
 
 	var/olddir = dir
