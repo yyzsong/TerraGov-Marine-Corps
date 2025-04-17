@@ -112,6 +112,9 @@
 #define PETRIFY_ABILITY_TRAIT "petrify_ability_trait"
 #define SHATTERING_ROAR_ABILITY_TRAIT "shattering_roar_ability_trait"
 #define ZERO_FORM_BEAM_ABILITY_TRAIT "zero_form_beam_ability_trait"
+#define CONQUEROR_ABILITY_TRAIT "conqueror_ability_trait"
+#define CONQUEROR_ENDURANCE_TRAIT "conqueror_endurance_trait"
+#define CONQUEROR_OBLITERATION_TRAIT "conqueror_obliteration_trait"
 #define HEATRAY_BEAM_ABILITY_TRAIT "heatray_ability_trait"
 #define DRAGON_ABILITY_TRAIT "dragon_ability_trait"
 #define VALHALLA_TRAIT "valhalla"
@@ -140,6 +143,8 @@
 
 ///Used for managing KEEP_TOGETHER in [/atom/var/appearance_flags]
 #define TRAIT_KEEP_TOGETHER "keep-together"
+
+#define TRAIT_WARPED_INVISIBLE "warped_invisible"
 
 #define ABSTRACT_ITEM_TRAIT "abstract_item"
 /// A trait given by any status effect
@@ -267,6 +272,7 @@
 #define TRAIT_AREA_SENSITIVE "area-sensitive"
 #define TRAIT_HEARING_SENSITIVE "hearing_sensitive" //target is hearing sensitive. Every hearing sensitive atom has this trait
 
+#define TRAIT_HAS_INTERIOR "has_interior" // Used for atoms that have an interior datum
 /// Trait given to a mob that is currently thinking (giving off the "thinking" icon), used in an IC context
 #define TRAIT_THINKING_IN_CHARACTER "currently_thinking_IC"
 
@@ -280,6 +286,12 @@
 #define TRAIT_CANT_RIDE "cant_ride"
 ///Prevents humans from gaining oxyloss in their handle_breath()
 #define TRAIT_IGNORE_SUFFOCATION "ignore_suffocation"
+
+///climbing a structure
+#define TRAIT_IS_CLIMBING "is_climbing"
+///reloading a gun
+#define TRAIT_IS_RELOADING "is_reloading"
+
 //All the traits for guns
 #define TRAIT_GUN_SAFETY "safety"
 #define TRAIT_GUN_FLASHLIGHT_ON "light_on"
